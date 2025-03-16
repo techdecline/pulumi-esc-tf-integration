@@ -1,0 +1,12 @@
+# Ignore .env files to protect sensitive data
+.env
+
+# Ignore terraform state file
+*/.terraform/
+*/.terraform.lock.hcl
+*/terraform.tfstate
+*/terraform.tfstate.backup
+
+
+# Ignore python virtual environment (uv) and its hidden directories
+*/venv/
