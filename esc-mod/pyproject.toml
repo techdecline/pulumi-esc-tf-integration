@@ -9,3 +9,5 @@ dependencies = [
     "pyyaml>=6.0.2",
     "requests>=2.32.3",
 ]
+[project.scripts]
+esc-mod = "main:main"

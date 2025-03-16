@@ -65,7 +65,7 @@ def add_value_to_environment_data(
                 organization=organization,
                 project=project,
                 environment=environment,
-            )        
+            )
         for key, details in value.items():
             if "value" in details:
                 add_property(new_environment_data, property_name=key, property_value=details["value"])
@@ -108,7 +108,6 @@ def main():
         "--value", help="Value of the property to add to the environment"
     )
     parser.add_argument(
-        # "--terraform-output", help="Terraform Output File", default="./output.json"
         "--terraform-output", help="Terraform Output File", default="./output.json"
     )
 
