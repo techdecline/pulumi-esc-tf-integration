@@ -12,7 +12,7 @@ def add_property(obj, property_name, property_value, environment_var:bool = Fals
     obj["values"][property_name] = property_value
     if environment_var:
         # convert property_name to environment variable syntax and optionally add prefix
-        property_name = f"{environment_var_prefix}{property_name}".upper()
+        property_name = f"{environment_var_prefix}{property_name}"
         obj["values"]["environmentVariables"][property_name] = f'${property_value}'
     return obj
 
