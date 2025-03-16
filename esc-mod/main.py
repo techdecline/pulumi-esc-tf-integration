@@ -7,9 +7,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def add_property(obj, property_name, property_value) -> dict:
+def add_property(obj, property_name, property_value, environment_var:bool = False, environment_var_prefix:str = "") -> dict:
     """Add a new property to the given dictionary."""
     obj["values"][property_name] = property_value
+    if environment_var:
+        # convert property_name to environment variable syntax and optionally add prefix
+        property_name = f"{environment_var_prefix}{property_name}".upper()
+        obj["values"]["environmentVariables"][property_name] = f'${property_value}'
     return obj
 
 
@@ -39,6 +43,7 @@ def add_value_to_environment_data(
     access_token: str,
     key: str,
     value: str,
+    create_tf_var: bool = False,
     
 ) -> dict:
     url_update = f"https://api.pulumi.com/api/esc/environments/{organization}/{project}/{environment}"
@@ -68,7 +73,12 @@ def add_value_to_environment_data(
             )
         for key, details in value.items():
             if "value" in details:
-                add_property(new_environment_data, property_name=key, property_value=details["value"])
+                if create_tf_var:
+                    add_property(new_environment_data, property_name=key, property_value=details["value"])
+                else:
+                    add_property(new_environment_data, property_name=key, property_value=details["value"], environment_var=True, environment_var_prefix="TF_VAR_")
+            else:
+                add_property(new_environment_data, property_name=key, property_value=details)
 
     response_update = requests.patch(
         url_update,
@@ -110,6 +120,11 @@ def main():
     parser.add_argument(
         "--terraform-output", help="Terraform Output File", default="./output.json"
     )
+    parser.add_argument(
+        "--create-tf-env-var",
+        action="store_true",
+        help="Enable creation of Terraform environment variables"
+    )
 
     args = parser.parse_args()
     if args.key is not None and args.value is not None:
@@ -131,6 +146,7 @@ def main():
             environment=args.environment,
             key="terraform_output",
             value=data,
+            create_tf_var=args.create_tf_env_var
         )
     else:
         print("Please provide either --key and --value or --terraform-output")
