@@ -1,1 +1,0 @@
-private_dns_zone_id = "/subscriptions/a1bb21f8-fca2-4832-8b35-4fc83f310690/resourceGroups/rg-gq6s0/providers/Microsoft.Network/privateDnsZones/app.techdecline.dev"
